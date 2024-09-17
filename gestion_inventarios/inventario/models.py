@@ -2,10 +2,6 @@ from django.db import models
 
 # Create your models here.
 
-from django.db import models
-
-# Create your models here.
-
 class Categoria(models.Model):
     nombre = models.CharField(max_length=100)
     descripcion = models.TextField()
@@ -35,35 +31,35 @@ class Producto(models.Model):
     cantidad = models.IntegerField()
     precio = models.DecimalField(max_digits=10, decimal_places=2)
     descripcion = models.TextField()
-    detalleProducto = models.OneToOneField('DetalleProducto', on_delete=models.CASCADE, related_name='producto_detalle', null=True)
+    detalleProducto = models.OneToOneField('DetalleProducto', on_delete=models.CASCADE, related_name='porducto_detalle', null=True)
 
     def __str__(self):
         return str(self.nombre)
-    
+
 class DetalleProducto(models.Model):
     producto = models.OneToOneField(Producto, on_delete=models.CASCADE)
     especificaciones = models.TextField()
     fecha_vencimiento = models.DateField(null=True, blank=True)
 
     def __str__(self):
-        return f"detalles de {self.producto.nombre}"
+        return f"Detalles de {self.producto.nombre}"
 
 class Cliente(models.Model):
     nombre = models.CharField(max_length=100)
     telefono = models.CharField(max_length=15)
-    email = models.TextField(50)
+    email = models.TextField(max_length=50)
     direccion = models.CharField(max_length=100)
 
     def __str__(self):
         return str(self.nombre)
 
+
 class Ventas(models.Model):
-    producto = models.ForeignKey('Producto', on_delete=models.CASCADE)
-    cliente = models.ForeignKey('Cliente', on_delete=models.CASCADE)
+    producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
+    cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
     cantidad = models.IntegerField()
     total = models.DecimalField(max_digits=10, decimal_places=2)
     fecha_venta = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"Venta de {self.cantidad} x {self.producto.nombre} a {self.cliente.nombre} el {self.fecha_venta} por {self.total}"
-    
